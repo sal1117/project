@@ -4,7 +4,7 @@ from datetime import datetime
 
 # NASA API 정보
 API_URL = "https://api.nasa.gov/planetary/apod"
-API_KEY = "DEMO_KEY"  # 여기다 본인 키 넣어도 돼요
+API_KEY = "DEMO_KEY"  # 본인의 키로 바꾸면 더 좋음
 
 st.set_page_config(page_title="오늘의 우주 사진", layout="centered")
 st.title("🌌 NASA 오늘의 우주 사진 (APOD)")
@@ -29,7 +29,7 @@ if response.status_code == 200:
 
     # 미디어 타입 확인
     if data["media_type"] == "image":
-        st.image(data["url"], caption=data["title"], use_column_width=True)
+        st.image(data["url"], caption=data["title"], use_container_width=True)
     elif data["media_type"] == "video":
         st.video(data["url"])
     else:
