@@ -70,8 +70,7 @@ if res.status_code == 200:  # HTTP 요청 성공 시
         st.write(f"### {sido}의 실시간 대기질 정보")
 
         # PM10과 PM2.5 등급을 색상으로 시각화
-        styled_df = df.style.apply(lambda x: [x['PM10 색상'] for _ in range(len(x))], axis=1, subset=["PM10 등급"]).apply(
-            lambda x: [x['PM2.5 색상'] for _ in range(len(x))], axis=1, subset=["PM2.5 등급"])
+        styled_df = df.style.applymap(get_color, subset=["PM10 등급"]).applymap(get_color, subset=["PM2.5 등급"])
         
         st.dataframe(styled_df)
 
