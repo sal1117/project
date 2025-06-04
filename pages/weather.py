@@ -26,14 +26,14 @@ st.title("🌫️ 지역별 대기질 등급 확인")
 sido = st.selectbox("시/도를 선택하세요", ["서울", "부산", "대구", "인천", "광주", "대전", "울산"])
 
 # API 요청
-API_KEY = st.secrets['API_KEY']
+APIKEY = st.secrets['API_KEY']
 url = f"http://apis.data.go.kr/B552584/ArpltnInforInqireSvc/getCtprvnRltmMesureDnsty"
 params = {
     "sidoName": sido,
     "returnType": "json",
     "numOfRows": "100",
     "pageNo": "1",
-    "serviceKey": API_KEY,
+    "serviceKey": APIKEY,
     "ver": "1.0"
 }
 res = requests.get(url, params=params)
