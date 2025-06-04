@@ -87,6 +87,16 @@ if res.status_code == 200:  # HTTP 요청 성공 시
             pm25_grade_counts = df["PM2.5 등급"].value_counts()
             st.bar_chart(pm25_grade_counts)
 
+            # 추가: 시간대별 대기질 변화
+            if 'dataTime' in df.columns:
+                df['dataTime'] = pd.to_datetime(df['dataTime'], format='%Y-%m-%d %H:%M')
+                df.set_index('dataTime', inplace=True)
+                st.subheader("시간대별 PM10 대기질 변화")
+                st.line_chart(df['pm10Value'])
+                
+                st.subheader("시간대별 PM2.5 대기질 변화")
+                st.line_chart(df['pm25Value'])
+
         else:
             st.error("대기질 데이터를 찾을 수 없습니다.")
         
