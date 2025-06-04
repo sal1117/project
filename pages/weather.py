@@ -36,15 +36,24 @@ params = {
     "serviceKey": API_key,
     "ver": "1.0"
 }
+
+# API 요청 및 응답 상태 코드 체크
 res = requests.get(url, params=params)
-data = res.json()['response']['body']['items']
 
-# 데이터프레임 변환
-df = pd.DataFrame(data)
-df["pm10Value"] = pd.to_numeric(df["pm10Value"], errors="coerce")
-df["pm25Value"] = pd.to_numeric(df["pm25Value"], errors="coerce")
-df["PM10 등급"] = df["pm10Value"].apply(lambda x: get_grade(x, 'pm10'))
-df["PM2.5 등급"] = df["pm25Value"].apply(lambda x: get_grade(x, 'pm25'))
+if res.status_code == 200:  # HTTP 요청 성공 시
+    try:
+        data = res.json()['response']['body']['items']
+        
+        # 데이터프레임 변환
+        df = pd.DataFrame(data)
+        df["pm10Value"] = pd.to_numeric(df["pm10Value"], errors="coerce")
+        df["pm25Value"] = pd.to_numeric(df["pm25Value"], errors="coerce")
+        df["PM10 등급"] = df["pm10Value"].apply(lambda x: get_grade(x, 'pm10'))
+        df["PM2.5 등급"] = df["pm25Value"].apply(lambda x: get_grade(x, 'pm25'))
 
-st.write(f"### {sido}의 실시간 대기질 정보")
-st.dataframe(df[["stationName", "pm10Value", "PM10 등급", "pm25Value", "PM2.5 등급"]])
+        st.write(f"### {sido}의 실시간 대기질 정보")
+        st.dataframe(df[["stationName", "pm10Value", "PM10 등급", "pm25Value", "PM2.5 등급"]])
+    except ValueError:
+        st.error("응답 데이터 형식에 오류가 발생했습니다.")
+else:
+    st.error(f"API 요청에 실패했습니다. 상태 코드: {res.status_code}")
